@@ -9,15 +9,12 @@ export const BoxesCore = ({ className, ...rest }: { className?: string }) => {
 
     // Using direct color values instead of CSS variables
     const colors = [
-        "rgb(125 211 252)", // sky-300
-        "rgb(249 168 212)", // pink-300
-        "rgb(134 239 172)", // green-300
-        "rgb(253 224 71)",  // yellow-300
-        "rgb(252 165 165)", // red-300
-        "rgb(216 180 254)", // purple-300
-        "rgb(147 197 253)", // blue-300
-        "rgb(165 180 252)", // indigo-300
-        "rgb(196 181 253)", // violet-300
+        "rgb(147, 51, 234)", // purple-600
+        "rgb(168, 85, 247)", // purple-500
+        "rgb(192, 132, 252)", // purple-400
+        "rgb(139, 92, 246)", // violet-500
+        "rgb(167, 139, 250)", // violet-400
+        "rgb(216, 180, 254)", // purple-300
     ];
 
     const getRandomColor = () => {

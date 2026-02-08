@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Home, Info, Grid3X3, LayoutDashboard, Activity, MessageCircle, Menu, X, CreditCard } from "lucide-react";
+import { Home, Info, Grid3X3, LayoutDashboard, Activity, MessageCircle, Menu, X, CreditCard, User } from "lucide-react";
 import { UserAvatar } from "@/components/ui/user-avatar";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { useAuth } from "@/context/AuthContext";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface NavItem {
   id: string;
@@ -14,12 +15,11 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { id: "nav-home", icon: Home, label: "Home", path: "/" },
-  { id: "nav-info", icon: Info, label: "Info", path: "/info" },
   { id: "nav-systems", icon: Grid3X3, label: "Systems", path: "/systems" },
   { id: "nav-dashboard", icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
   { id: "nav-output", icon: Activity, label: "Output", path: "/output-preview" },
-  { id: "nav-chatbot", icon: MessageCircle, label: "Chatbot", path: "/chatbot" },
   { id: "nav-pricing", icon: CreditCard, label: "Pricing", path: "/pricing" },
+  { id: "nav-chatbot", icon: MessageCircle, label: "Chatbot", path: "/chatbot" },
 ];
 
 export function BubbleNav() {
@@ -28,112 +28,138 @@ export function BubbleNav() {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const { isAuthenticated } = useAuth();
 
-  // Don't show nav on login/signup pages
-  if (location.pathname === '/login' || location.pathname === '/signup') {
-    return null;
-  }
-
-  const handleNavClick = (item: NavItem) => {
-    navigate(item.path);
+  const handleNavClick = (path: string) => {
+    navigate(path);
     setIsMobileOpen(false);
   };
 
-  const isActive = (item: NavItem) => {
-    return location.pathname === item.path;
+  const isActive = (path: string) => {
+    return location.pathname === path;
   };
 
   return (
-    <>
-      {/* Desktop Navbar - Pill Style */}
-      <nav
-        id="bubble-nav"
-        className="fixed top-6 left-1/2 -translate-x-1/2 z-50 hidden md:flex items-center gap-1 px-2 py-2 rounded-full bg-[#0a0a0a]/90 backdrop-blur-xl border border-white/10 shadow-2xl"
-        role="navigation"
-        aria-label="Main navigation"
-      >
-        {navItems.map((item) => {
-          const Icon = item.icon;
-          const active = isActive(item);
+    <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 h-20 flex items-center justify-between">
+        {/* Left: Logo */}
+        <div
+          className="flex items-center gap-2 cursor-pointer group"
+          onClick={() => navigate("/")}
+        >
+          <span className="text-2xl font-bold tracking-tight text-[#9d4edd] group-hover:text-[#b388ff] transition-colors">
+            Forsee <span className="text-foreground">AI</span>
+          </span>
+        </div>
 
-          return (
-            <button
-              key={item.id}
-              id={item.id}
-              onClick={() => handleNavClick(item)}
-              className={`relative flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-medium transition-colors duration-300 ${active
-                ? "text-primary-foreground"
-                : "text-[#8a8a8f] hover:text-white hover:bg-white/5"
-                }`}
-              aria-label={item.label}
-              aria-pressed={active}
-            >
-              {active && (
-                <motion.div
-                  layoutId="bubble-active"
-                  className="absolute inset-0 bg-primary rounded-full shadow-lg shadow-primary/25"
-                  transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                  style={{ zIndex: 0 }}
-                />
-              )}
-              <span className="relative z-10 flex items-center gap-2">
-                <Icon className="h-4 w-4" />
-                <span>{item.label}</span>
-              </span>
-            </button>
-          );
-        })}
+        {/* Center: Desktop Nav Icons */}
+        <nav className="hidden md:flex items-center gap-4 p-1 rounded-2xl">
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            const active = isActive(item.path);
 
-        {/* User Avatar */}
-        {isAuthenticated && (
-          <div className="ml-2 pl-2 border-l border-white/10">
-            <UserAvatar />
-          </div>
-        )}
-      </nav>
+            return (
+              <button
+                key={item.id}
+                onClick={() => handleNavClick(item.path)}
+                className={`relative group p-2.5 rounded-xl transition-all duration-300 ${active
+                  ? "bg-[#9d4edd]/20 text-[#9d4edd] border border-[#9d4edd]/30"
+                  : "text-foreground/60 hover:text-foreground"
+                  }`}
+                aria-label={item.label}
+              >
+                <Icon className="h-6 w-6 relative z-10" />
 
-      {/* Mobile FAB */}
-      <button
-        className="fixed right-4 bottom-4 z-50 md:hidden flex items-center justify-center w-14 h-14 rounded-full bg-[#0a0a0a]/90 backdrop-blur-xl border border-white/10 shadow-2xl text-white"
-        onClick={() => setIsMobileOpen(!isMobileOpen)}
-        aria-label={isMobileOpen ? "Close navigation" : "Open navigation"}
-        aria-expanded={isMobileOpen}
-      >
-        {isMobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-      </button>
+                {/* Tooltip */}
+                <div className="absolute top-full mt-3 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none px-2 py-1 rounded-md bg-card border border-border text-[10px] text-foreground whitespace-nowrap z-50 uppercase tracking-widest font-bold">
+                  {item.label}
+                </div>
+              </button>
+            );
+          })}
+        </nav>
+
+        {/* Right: Auth Buttons */}
+        <div className="flex items-center gap-4">
+          {!isAuthenticated ? (
+            <div className="flex items-center gap-6">
+              <button
+                onClick={() => navigate("/login")}
+                className="flex items-center gap-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors"
+              >
+                <User className="h-4 w-4" />
+                <span>Login</span>
+              </button>
+              <button
+                onClick={() => navigate("/signup")}
+                className="px-6 py-2 rounded-xl bg-[#9d4edd] hover:bg-[#8b3dc7] text-white text-sm font-bold transition-all shadow-[0_0_20px_rgba(157,78,221,0.3)] active:scale-95"
+              >
+                Sign Up
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-3">
+              <ThemeToggle />
+              <UserAvatar />
+            </div>
+          )}
+
+          {/* Mobile Menu Toggle */}
+          <button
+            className="md:hidden p-2 text-zinc-400 hover:text-white transition-colors"
+            onClick={() => setIsMobileOpen(!isMobileOpen)}
+          >
+            {isMobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
+        </div>
+      </div>
 
       {/* Mobile Nav Overlay */}
-      {isMobileOpen && (
-        <div className="fixed inset-0 z-40 md:hidden" onClick={() => setIsMobileOpen(false)}>
-          <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" />
-          <nav
-            className="absolute right-4 bottom-20 flex flex-col gap-2 p-2 rounded-2xl bg-[#0a0a0a]/95 backdrop-blur-xl border border-white/10"
-            role="navigation"
-            aria-label="Mobile navigation"
-            onClick={(e) => e.stopPropagation()}
+      <AnimatePresence>
+        {isMobileOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="absolute top-full left-0 right-0 bg-zinc-950 border-b border-white/5 p-4 md:hidden"
           >
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              const active = isActive(item);
+            <nav className="flex flex-col gap-2">
+              {navItems.map((item) => {
+                const Icon = item.icon;
+                const active = isActive(item.path);
 
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => handleNavClick(item)}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${active
-                    ? "bg-primary text-primary-foreground"
-                    : "text-[#8a8a8f] hover:text-white hover:bg-white/5"
-                    }`}
-                  aria-label={item.label}
-                  aria-pressed={active}
-                >
-                  <Icon className="h-4 w-4" />
-                  <span>{item.label}</span>
-                </button>
-              );
-            })}
-          </nav>
-        </div>
-      )}
-    </>
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => handleNavClick(item.path)}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${active
+                      ? "bg-[#9d4edd]/20 text-[#9d4edd] border border-[#9d4edd]/20"
+                      : "text-zinc-400 hover:text-white hover:bg-white/5"
+                      }`}
+                  >
+                    <Icon className="h-5 w-5" />
+                    <span>{item.label}</span>
+                  </button>
+                );
+              })}
+              {!isAuthenticated && (
+                <div className="grid grid-cols-2 gap-3 mt-4 pt-4 border-t border-white/5">
+                  <button
+                    onClick={() => handleNavClick("/login")}
+                    className="py-3 text-sm font-medium text-zinc-400 hover:text-white text-center"
+                  >
+                    Login
+                  </button>
+                  <button
+                    onClick={() => handleNavClick("/signup")}
+                    className="py-3 rounded-xl bg-[#9d4edd] text-white text-sm font-bold text-center"
+                  >
+                    Sign Up
+                  </button>
+                </div>
+              )}
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </header>
   );
 }

@@ -1,8 +1,8 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import React, { useEffect, useRef } from "react";
 import { ReactTyped } from "react-typed";
+import React from "react";
 
 // @ts-ignore
 function n(e) {
@@ -154,8 +154,6 @@ function onMousemove(e) {
         render();
 }
 
-let animationId: number | null = null; // Added to manage animation loop
-
 function render() {
     // @ts-ignore
     if (ctx.running) {
@@ -163,12 +161,22 @@ function render() {
         ctx.globalCompositeOperation = "source-over";
         // @ts-ignore
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+        // Theme-aware rendering settings
+        const isDark = document.documentElement.classList.contains("dark");
+
+        // In light mode, avoid "lighter" which washes out colors on white
         // @ts-ignore
-        ctx.globalCompositeOperation = "lighter";
+        ctx.globalCompositeOperation = isDark ? "lighter" : "source-over";
+
+        // Lock hue to purple (approx 270)
+        const hue = 270;
+        // Use higher opacity and slightly darker purple for light mode
         // @ts-ignore
-        ctx.strokeStyle = "hsla(" + Math.round(f.update()) + ",100%,50%,0.025)";
+        ctx.strokeStyle = `hsla(${hue}, 100%, ${isDark ? "60%" : "50%"}, ${isDark ? "0.2" : "0.4"})`;
+
         // @ts-ignore
-        ctx.lineWidth = 10;
+        ctx.lineWidth = 1;
         for (var e, t = 0; t < E.trails; t++) {
             // @ts-ignore
             (e = lines[t]).update();
@@ -176,14 +184,13 @@ function render() {
         }
         // @ts-ignore
         ctx.frame++;
-        // @ts-ignore
-        animationId = window.requestAnimationFrame(render);
+        window.requestAnimationFrame(render);
     }
 }
 
 function resizeCanvas() {
     // @ts-ignore
-    ctx.canvas.width = window.innerWidth - 20;
+    ctx.canvas.width = window.innerWidth;
     // @ts-ignore
     ctx.canvas.height = window.innerHeight;
 }
@@ -205,27 +212,16 @@ var ctx,
         tension: 0.99,
     };
 function Node() {
-    // @ts-ignore
     this.x = 0;
-    // @ts-ignore
     this.y = 0;
-    // @ts-ignore
     this.vy = 0;
-    // @ts-ignore
     this.vx = 0;
 }
 
-const renderCanvas = function () {
-    // Cancel previous animation if exists
-    if (animationId) {
-        window.cancelAnimationFrame(animationId);
-        animationId = null;
-    }
-
+export const renderCanvas = function () {
     // @ts-ignore
     const canvas = document.getElementById("canvas");
-    if (!canvas) return; // Guard against missing canvas
-
+    if (!canvas) return;
     // @ts-ignore
     ctx = canvas.getContext("2d");
     ctx.running = true;
@@ -234,7 +230,7 @@ const renderCanvas = function () {
         phase: Math.random() * 2 * Math.PI,
         amplitude: 85,
         frequency: 0.0015,
-        offset: 285, // Purple/Violet offset
+        offset: 285,
     });
     document.addEventListener("mousemove", onMousemove);
     document.addEventListener("touchstart", onMousemove);
@@ -255,23 +251,21 @@ const renderCanvas = function () {
     resizeCanvas();
 };
 
-export const cleanupCanvas = () => {
-    if (ctx) ctx.running = false;
-    if (animationId) {
-        window.cancelAnimationFrame(animationId);
-        animationId = null;
-    }
+export const cleanupCanvas = function () {
+    ctx.running = false;
     document.removeEventListener("mousemove", onMousemove);
     document.removeEventListener("touchstart", onMousemove);
     document.body.removeEventListener("orientationchange", resizeCanvas);
     window.removeEventListener("resize", resizeCanvas);
 }
 
+
 interface TypeWriterProps {
     strings: string[];
 }
 
-const TypeWriter = ({ strings }: TypeWriterProps) => {
+
+export const TypeWriter = ({ strings }: TypeWriterProps) => {
     return (
         <ReactTyped
             loop
@@ -298,7 +292,11 @@ interface ShineBorderProps {
     children: React.ReactNode;
 }
 
-function ShineBorder({
+/**
+ * @name Shine Border
+ * @description It is an animated background border effect component
+ */
+export function ShineBorder({
     borderRadius = 8,
     borderWidth = 1,
     duration = 14,
@@ -334,5 +332,3 @@ function ShineBorder({
         </div>
     );
 }
-
-export { renderCanvas, TypeWriter, ShineBorder }

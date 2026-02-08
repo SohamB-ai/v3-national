@@ -24,19 +24,6 @@ export function FooterCTA() {
           <ArrowRight className="h-5 w-5" />
         </button>
       </div>
-
-      {/* Footer */}
-      <footer className="mt-24 pt-8 border-t border-border pointer-events-auto">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <span className="text-xl font-bold text-primary font-doto">Forsee AI</span>
-            <span className="text-muted-foreground">— <span className="text-purple">The Predictor</span></span>
-          </div>
-          <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} Forsee AI. Predictive maintenance made simple.
-          </p>
-        </div>
-      </footer>
     </section>
   );
 }

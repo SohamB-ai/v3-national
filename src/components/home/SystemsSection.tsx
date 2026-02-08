@@ -2,9 +2,13 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Wind, Zap, Cog, Building2, Server, Activity, Cpu, Gauge } from "lucide-react";
+import {
+  Wind, Zap, Cog, Building2, Server, Activity, Cpu, Gauge,
+  Sun, Network, Droplets, Bot, Car, Battery, Plane, Train,
+  Stethoscope, Fan, Drill, Microscope, Radio, Binary, Timer
+} from "lucide-react";
 import { CardStack, CardStackItem } from "@/components/ui/card-stack";
-import AetherHero from "@/components/ui/aether-hero";
+import { HeroGeometric } from "@/components/ui/shape-landing-hero";
 
 export const systemDomains = [
   {
@@ -71,10 +75,114 @@ export const systemDomains = [
     color: "text-amber",
     bgColor: "bg-amber/10",
   },
+  {
+    slug: "solar-inverters",
+    title: "Solar Inverters",
+    icon: Sun,
+    failures: "Power electronics degradation",
+    color: "text-yellow-400",
+    bgColor: "bg-yellow-400/10",
+  },
+  {
+    slug: "power-generators",
+    title: "Power Generators",
+    icon: Activity,
+    failures: "Bearing wear, cooling failure",
+    color: "text-blue-400",
+    bgColor: "bg-blue-400/10",
+  },
+  {
+    slug: "smart-grid",
+    title: "Smart Grid Equipment",
+    icon: Network,
+    failures: "Voltage regulators, circuit breakers",
+    color: "text-indigo-400",
+    bgColor: "bg-indigo-400/10",
+  },
+  {
+    slug: "pumps",
+    title: "Industrial Pumps",
+    icon: Droplets,
+    failures: "Cavitation, seal failure",
+    color: "text-sky-400",
+    bgColor: "bg-sky-400/10",
+  },
+  {
+    slug: "industrial-robots",
+    title: "Industrial Robots",
+    icon: Bot,
+    failures: "Joint motor failure",
+    color: "text-rose-400",
+    bgColor: "bg-rose-400/10",
+  },
+  {
+    slug: "vehicle-engines",
+    title: "Vehicle Engines",
+    icon: Car,
+    failures: "Fuel system faults",
+    color: "text-orange-400",
+    bgColor: "bg-orange-400/10",
+  },
+  {
+    slug: "ev-batteries",
+    title: "EV Batteries",
+    icon: Battery,
+    failures: "Capacity degradation",
+    color: "text-lime-400",
+    bgColor: "bg-lime-400/10",
+  },
+  {
+    slug: "jet-engines",
+    title: "Jet Engines",
+    icon: Plane,
+    failures: "Turbine blade fatigue",
+    color: "text-zinc-300",
+    bgColor: "bg-zinc-300/10",
+  },
+  {
+    slug: "traction-motors",
+    title: "Traction Motors",
+    icon: Train,
+    failures: "Electrical faults, bearings",
+    color: "text-red-400",
+    bgColor: "bg-red-400/10",
+  },
+  {
+    slug: "ventilators",
+    title: "Ventilators",
+    icon: Stethoscope,
+    failures: "Component failure",
+    color: "text-teal-400",
+    bgColor: "bg-teal-400/10",
+  },
+  {
+    slug: "cooling-systems",
+    title: "Cooling Systems",
+    icon: Fan,
+    failures: "Fan failure, thermal load",
+    color: "text-blue-300",
+    bgColor: "bg-blue-300/10",
+  },
+  {
+    slug: "drilling-equipment",
+    title: "Drilling Equipment",
+    icon: Drill,
+    failures: "Bit wear, hydraulic loss",
+    color: "text-stone-400",
+    bgColor: "bg-stone-400/10",
+  },
+  {
+    slug: "lithography",
+    title: "Lithography Machines",
+    icon: Microscope,
+    failures: "Optical drift",
+    color: "text-violet-400",
+    bgColor: "bg-violet-400/10",
+  },
 ];
 
 // CardStack items with Unsplash images for each system
-const systemCards: CardStackItem[] = [
+export const systemCards: CardStackItem[] = [
   {
     id: "wind-turbines",
     title: "Wind Turbines",
@@ -131,52 +239,112 @@ const systemCards: CardStackItem[] = [
     imageSrc: "https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=800&auto=format&fit=crop",
     href: "/system/hvac-systems",
   },
+  {
+    id: "solar-inverters",
+    title: "Solar Inverters",
+    description: "Monitor power electronics degradation and thermal stress in renewable energy systems.",
+    imageSrc: "https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?w=800&auto=format&fit=crop",
+    href: "/system/solar-inverters",
+  },
+  {
+    id: "power-generators",
+    title: "Power Generators",
+    description: "Predict bearing wear and cooling failures in industrial power generation units.",
+    imageSrc: "https://images.unsplash.com/photo-1616429555234-a0279619623d?w=800&auto=format&fit=crop",
+    href: "/system/power-generators",
+  },
+  {
+    id: "smart-grid",
+    title: "Smart Grid Equipment",
+    description: "Analyze voltage regulators and circuit breakers for grid stability and failure prevention.",
+    imageSrc: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=800&auto=format&fit=crop",
+    href: "/system/smart-grid",
+  },
+  {
+    id: "pumps",
+    title: "Industrial Pumps & Compressors",
+    description: "Detect cavitation, seal failures, and pressure leakages in fluid transport systems.",
+    imageSrc: "https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=800&auto=format&fit=crop",
+    href: "/system/pumps",
+  },
+  {
+    id: "industrial-robots",
+    title: "Industrial Robots",
+    description: "Monitor joint motor health and mechanical wear in precision automation.",
+    imageSrc: "https://images.unsplash.com/photo-1535378917042-10a22c95931a?w=800&auto=format&fit=crop",
+    href: "/system/industrial-robots",
+  },
+  {
+    id: "vehicle-engines",
+    title: "Vehicle Engines & Braking",
+    description: "Predict fuel system faults and hydraulic loss in automotive fleets.",
+    imageSrc: "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=800&auto=format&fit=crop",
+    href: "/system/vehicle-engines",
+  },
+  {
+    id: "ev-batteries",
+    title: "Electric Vehicle Batteries",
+    description: "Monitor capacity degradation and thermal runaway risks in EV storage systems.",
+    imageSrc: "https://images.unsplash.com/photo-1593941707882-a5bba14938c7?w=800&auto=format&fit=crop",
+    href: "/system/ev-batteries",
+  },
+  {
+    id: "jet-engines",
+    title: "Jet Engines & Avionics",
+    description: "Predict turbine blade fatigue and electronics overheating in aerospace systems.",
+    imageSrc: "https://images.unsplash.com/photo-1540962351504-03099e0a754b?w=800&auto=format&fit=crop",
+    href: "/system/jet-engines",
+  },
+  {
+    id: "traction-motors",
+    title: "Railway Traction & Bearings",
+    description: "Detect electrical faults and overheating in high-speed rail motors and bearings.",
+    imageSrc: "https://images.unsplash.com/photo-1532105956626-9569c03602f6?w=800&auto=format&fit=crop",
+    href: "/system/traction-motors",
+  },
+  {
+    id: "ventilators",
+    title: "Life-Critical Medical Devices",
+    description: "Monitor component failures in ventilators and dialysis machines for patient safety.",
+    imageSrc: "https://images.unsplash.com/photo-1516549655169-df83a0774514?w=800&auto=format&fit=crop",
+    href: "/system/ventilators",
+  },
+  {
+    id: "cooling-systems",
+    title: "Data Center Cooling & UPS",
+    description: "Predict fan failures and battery capacity loss in mission-critical IT infrastructure.",
+    imageSrc: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&auto=format&fit=crop",
+    href: "/system/cooling-systems",
+  },
+  {
+    id: "drilling-equipment",
+    title: "Oil & Gas Drilling & Pipelines",
+    description: "Monitor bit wear and pipeline leakage risk in harsh extraction environments.",
+    imageSrc: "https://images.unsplash.com/photo-1516199423456-1f1e91b06f25?w=800&auto=format&fit=crop",
+    href: "/system/drilling-equipment",
+  },
+  {
+    id: "lithography",
+    title: "Semiconductor Lithography",
+    description: "Predict optical drift and gas flow instability in high-precision chip fabrication.",
+    imageSrc: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&auto=format&fit=crop",
+    href: "/system/lithography",
+  },
 ];
 
 export function SystemsSection() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
+  const [activeCard, setActiveCard] = useState<CardStackItem>(systemCards[0]);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
-
   const handleCardChange = (_index: number, item: CardStackItem) => {
-    // Optional: could track which system is being viewed
-    console.log("Viewing:", item.title);
+    setActiveCard(item);
   };
 
   return (
-    <section
-      id="section-systems"
-      ref={sectionRef}
-      className={`relative min-h-screen py-24 px-6 transition-all duration-700 overflow-hidden flex items-center justify-center ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-        }`}
+    <HeroGeometric
+      title1="Precision Monitoring"
+      title2="Predictive Systems"
     >
-      {/* Search/Background - AetherHero */}
-      <div className="absolute inset-0 z-0">
-        <AetherHero
-          title=""
-          subtitle=""
-          height="100%"
-          overlayGradient="linear-gradient(180deg, rgba(88, 28, 135, 0.4) 0%, rgba(0, 0, 0, 0.8) 100%)"
-          className="w-full h-full"
-        />
-      </div>
 
       <div className="relative z-10 max-w-6xl mx-auto">
         {/* CardStack for systems */}
@@ -187,11 +355,22 @@ export function SystemsSection() {
           intervalMs={2000}
           pauseOnHover
           showDots
-          cardWidth={480}
-          cardHeight={300}
+          cardWidth={420}
+          cardHeight={280}
           onChangeIndex={handleCardChange}
         />
+
+        {/* Predict Button */}
+        <div className="mt-24 mb-32 flex justify-center">
+          <button
+            onClick={() => activeCard.href && navigate(activeCard.href)}
+            className="group relative px-10 py-4 rounded-full bg-primary text-white font-bold text-lg transition-all duration-300 hover:scale-105 hover:shadow-[0_0_35px_rgba(157,78,221,0.6)] active:scale-95 overflow-hidden"
+          >
+            <span className="relative z-10">Predict in {activeCard.title}</span>
+            <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+          </button>
+        </div>
       </div>
-    </section>
+    </HeroGeometric>
   );
 }

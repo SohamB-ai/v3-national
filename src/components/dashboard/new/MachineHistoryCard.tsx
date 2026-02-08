@@ -1,25 +1,29 @@
 import { ResponsiveContainer, BarChart, Bar, XAxis, Tooltip } from "recharts";
 import { History, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { useMemo } from "react";
 
-const historyData = [
-    { day: "M", uptime: 98, faults: 0 },
-    { day: "T", uptime: 96, faults: 1 },
-    { day: "W", uptime: 99, faults: 0 },
-    { day: "T", uptime: 88, faults: 3 },
-    { day: "F", uptime: 92, faults: 1 },
-    { day: "S", uptime: 100, faults: 0 },
-    { day: "S", uptime: 99, faults: 0 },
-];
+interface MachineHistoryCardProps {
+    deviceId?: string;
+}
 
-export function MachineHistoryCard() {
+export function MachineHistoryCard({ deviceId = "dev-01" }: MachineHistoryCardProps) {
+    const historyData = useMemo(() => {
+        const seed = deviceId.charCodeAt(deviceId.length - 1);
+        return Array.from({ length: 7 }, (_, i) => ({
+            day: ["M", "T", "W", "T", "F", "S", "S"][i],
+            uptime: 90 + ((seed + i) % 10),
+            faults: (seed + i) % 4
+        }));
+    }, [deviceId]);
+
     return (
-        <div className="bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 p-6 flex flex-col h-full min-h-[200px] font-tinos font-serif">
+        <div className="bg-foreground/5 backdrop-blur-md rounded-2xl border border-foreground/10 p-6 flex flex-col h-full min-h-[200px] font-tinos font-serif">
             <div className="flex items-center justify-between mb-4">
-                <h3 className="text-white/90 font-semibold flex items-center gap-2 font-inter">
-                    <History className="w-4 h-4 text-slate-400" /> Machine History (7 Days)
+                <h3 className="text-foreground/90 font-semibold flex items-center gap-2 font-inter">
+                    <History className="w-4 h-4 text-muted-foreground" /> Machine History (7 Days)
                 </h3>
                 <div className="flex gap-2">
-                    <span className="text-xs px-2 py-1 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-inter">96.5% Uptime</span>
+                    <span className="text-xs px-2 py-1 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 font-inter">96.5% Uptime</span>
                 </div>
             </div>
 
@@ -38,8 +42,8 @@ export function MachineHistoryCard() {
                 </ResponsiveContainer>
             </div>
 
-            <div className="mt-4 flex gap-4 text-xs text-slate-400 font-inter">
-                <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded bg-slate-700" /> Normal Operation</div>
+            <div className="mt-4 flex gap-4 text-xs text-muted-foreground font-inter">
+                <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded bg-foreground/20" /> Normal Operation</div>
                 <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded bg-[#FF5C5C]" /> Critical Faults</div>
             </div>
         </div>

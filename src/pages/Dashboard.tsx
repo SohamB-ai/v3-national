@@ -5,24 +5,51 @@ import { InsightsPanel } from "@/components/dashboard/new/InsightsPanel";
 import { MachineHistoryCard } from "@/components/dashboard/new/MachineHistoryCard";
 import { FloatingDashboardActions } from "@/components/dashboard/new/FloatingDashboardActions";
 // import { SpiralAnimation } from "@/components/ui/spiral-animation";
-import { DashboardNavbar } from "@/components/dashboard/new/DashboardNavbar";
+import { DashboardNavbar, Device } from "@/components/dashboard/new/DashboardNavbar";
 import { BubbleNav } from "@/components/navigation/BubbleNav";
-import { useEffect } from "react";
+import { MachineThinking } from "@/components/ui/machine-thinking";
+import { useEffect, useState } from "react";
 import { renderCanvas, cleanupCanvas } from "@/components/ui/hero-designali";
+import { useDashboard } from "@/context/DashboardContext";
 
 export default function Dashboard() {
+  const { devices } = useDashboard();
+  const [isLoading, setIsLoading] = useState(true);
+  const [selectedDevice, setSelectedDevice] = useState<Device>(devices[0]);
+
   useEffect(() => {
+    // Sync selected device if devices list changes (e.g. initial load)
+    if (!selectedDevice && devices.length > 0) {
+      setSelectedDevice(devices[0]);
+    }
+  }, [devices]);
+
+  useEffect(() => {
+    // Simulate AI System Initialization
+    const timer = setTimeout(() => setIsLoading(false), 3500);
     renderCanvas();
     return () => {
       cleanupCanvas();
+      clearTimeout(timer);
     };
   }, []);
 
+  const handleDeviceChange = (device: Device) => {
+    setIsLoading(true);
+    // Simulate AI thinking and context switching
+    setTimeout(() => {
+      setSelectedDevice(device);
+      setIsLoading(false);
+    }, 2500);
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-black to-[#2e1065] text-white selection:bg-purple-500/30 selection:text-purple-200 overflow-x-hidden relative font-tinos">
+    <div className="min-h-screen bg-gradient-to-br from-white via-purple-50 to-purple-200 dark:from-black dark:via-black dark:to-[#2e1065] text-foreground selection:bg-purple-500/30 selection:text-purple-200 overflow-x-hidden relative font-tinos">
+      <MachineThinking isThinking={isLoading} />
+      {/* Background Ambience - Canvas */}
       {/* Background Ambience - Canvas */}
       <canvas
-        className="fixed inset-0 z-0 pointer-events-none w-full h-full opacity-60 mix-blend-screen"
+        className="fixed inset-0 z-0 pointer-events-none w-full h-full opacity-80 dark:mix-blend-screen transition-opacity duration-500"
         id="canvas"
       ></canvas>
 
@@ -31,7 +58,7 @@ export default function Dashboard() {
 
       <div className="relative z-10 flex flex-col min-h-screen pt-20">
         {/* Dashboard Sub-Navbar */}
-        <DashboardNavbar />
+        <DashboardNavbar selectedDevice={selectedDevice} devices={devices} onDeviceChange={handleDeviceChange} />
 
         {/* Main Content */}
         <div className="flex-1 px-6 py-6 space-y-6">
@@ -44,22 +71,22 @@ export default function Dashboard() {
           <div className="grid grid-cols-12 gap-6">
             {/* LEFT: Fleet Command */}
             <div className="col-span-12 lg:col-span-3 xl:col-span-2 min-h-[500px] flex flex-col">
-              <FleetCommandPanel />
+              <FleetCommandPanel deviceId={selectedDevice.id} />
             </div>
 
             {/* CENTER: Asset Intelligence */}
             <div className="col-span-12 lg:col-span-6 xl:col-span-7 min-h-[500px] flex flex-col">
-              <AssetIntelligencePanel />
+              <AssetIntelligencePanel deviceId={selectedDevice.id} />
             </div>
 
             {/* RIGHT: Insights */}
             <div className="col-span-12 lg:col-span-3 xl:col-span-3 min-h-[500px] flex flex-col">
-              <InsightsPanel />
+              <InsightsPanel deviceId={selectedDevice.id} />
             </div>
 
             {/* BOTTOM: Machine History (Full Width) */}
             <div className="col-span-12 h-[300px]">
-              <MachineHistoryCard />
+              <MachineHistoryCard deviceId={selectedDevice.id} />
             </div>
           </div>
         </div>

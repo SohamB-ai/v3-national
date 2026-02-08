@@ -8,40 +8,88 @@
 /* Forsee AI - Neon Future Design System */
 
 @layer base {
+
+  /* Light Theme (default) */
   :root {
-    /* Neon & Black Theme */
+    /* Light Theme Colors */
+    --bg: #ffffff;
+    --card-bg: #f5f5f5;
+    --muted: #e5e5e5;
+
+    /* Neon Colors - Purple stays */
+    --neon-violet: #9d4edd;
+    --accent-color: var(--neon-violet);
+
+    /* Status Colors */
+    --success: 160 100% 40%;
+    --warning: 40 100% 45%;
+    --critical: 0 100% 50%;
+    --info: 270 100% 50%;
+
+    --glass: rgba(255, 255, 255, 0.9);
+
+    /* Custom Shadows */
+    --shadow-cyan: 0 0 20px rgba(157, 78, 221, 0.2);
+    --shadow-violet: 0 0 20px rgba(157, 78, 221, 0.2);
+
+    /* Shadcn/Tailwind overrides - Light */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 5%;
+
+    --card: 0 0% 98%;
+    --card-foreground: 0 0% 5%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 5%;
+
+    --primary: 273 67% 50%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 273 67% 55%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 0 0% 90%;
+    --muted-foreground: 0 0% 40%;
+
+    --accent: 273 67% 50%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 100% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 85%;
+    --input: 0 0% 90%;
+    --ring: 273 67% 50%;
+
+    --radius: 0.75rem;
+
+    /* Bubble nav */
+    --bubble-bg: 0 0% 95%;
+    --bubble-shadow: 0 8px 24px rgba(157, 78, 221, 0.15);
+    --bubble-border: rgba(157, 78, 221, 0.2);
+  }
+
+  /* Dark Theme */
+  .dark {
     --bg: #000000;
     --card-bg: #0a0a0a;
     --muted: #262626;
 
-    /* Neon Colors */
     --neon-violet: #9d4edd;
-
-    /* Primary is now Purple */
     --accent-color: var(--neon-violet);
 
-    /* Status Colors - Adjusted for Neon Theme */
     --success: 160 100% 50%;
-    /* Bright Green */
     --warning: 40 100% 50%;
-    /* Bright Orange */
     --critical: 0 100% 60%;
-    /* Bright Red */
     --info: 270 100% 60%;
-    /* Purple for Info too */
 
     --glass: rgba(10, 10, 10, 0.9);
 
-    /* Custom Shadows - Neon Glows */
     --shadow-cyan: 0 0 20px rgba(157, 78, 221, 0.3);
-    /* Remapped to purple */
     --shadow-violet: 0 0 20px rgba(157, 78, 221, 0.3);
 
-    /* Shadcn/Tailwind overrides */
     --background: 0 0% 0%;
-    /* Black */
     --foreground: 0 0% 100%;
-    /* White */
 
     --card: 0 0% 5%;
     --card-foreground: 0 0% 100%;
@@ -50,12 +98,9 @@
     --popover-foreground: 0 0% 100%;
 
     --primary: 273 67% 59%;
-    /* Neon Violet #9d4edd */
     --primary-foreground: 0 0% 100%;
-    /* White text on purple */
 
     --secondary: 273 67% 59%;
-    /* Neon Violet #9d4edd */
     --secondary-foreground: 0 0% 100%;
 
     --muted: 0 0% 15%;
@@ -73,7 +118,6 @@
 
     --radius: 0.75rem;
 
-    /* Bubble nav */
     --bubble-bg: 0 0% 8%;
     --bubble-shadow: 0 8px 24px rgba(157, 78, 221, 0.25);
     --bubble-border: rgba(157, 78, 221, 0.3);
@@ -245,6 +289,57 @@
 
     50% {
       transform: translateY(-8px);
+    }
+  }
+
+  @keyframes onloadopacity {
+    24% {
+      opacity: 0;
+    }
+
+    100% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes onloadbgt {
+    0% {
+      translate: 0 -70%;
+      opacity: 0.3;
+    }
+
+    100% {
+      translate: 0 -64%;
+      opacity: 0.8;
+    }
+  }
+
+  @keyframes onloadbgb {
+    0% {
+      translate: 0 70%;
+      opacity: 0.3;
+    }
+
+    100% {
+      translate: 0 64%;
+      opacity: 0.8;
+    }
+  }
+
+  @keyframes pulse-slow {
+    0% {
+      transform: scale(1) rotate(0deg);
+      opacity: 0.3;
+    }
+
+    50% {
+      transform: scale(1.05) rotate(2deg);
+      opacity: 0.5;
+    }
+
+    100% {
+      transform: scale(1) rotate(0deg);
+      opacity: 0.3;
     }
   }
 

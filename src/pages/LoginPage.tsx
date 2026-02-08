@@ -1,28 +1,8 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
-import { SignInPage, Testimonial } from "@/components/ui/sign-in";
+import { AuthComponent } from "@/components/ui/AuthComponent";
 import { toast } from "sonner";
-
-const testimonials: Testimonial[] = [
-    {
-        avatarSrc: "https://randomuser.me/api/portraits/women/57.jpg",
-        name: "Sarah Chen",
-        handle: "@sarahops",
-        text: "Forsee AI predicted our turbine failure 3 weeks early. Saved us $2M in downtime costs."
-    },
-    {
-        avatarSrc: "https://randomuser.me/api/portraits/men/64.jpg",
-        name: "Marcus Johnson",
-        handle: "@marcuseng",
-        text: "The predictive accuracy is incredible. Our maintenance team now works proactively, not reactively."
-    },
-    {
-        avatarSrc: "https://randomuser.me/api/portraits/men/32.jpg",
-        name: "David Martinez",
-        handle: "@davidmaint",
-        text: "Best investment we made for our fleet operations. Equipment uptime increased by 40%."
-    },
-];
+import { Gem } from "lucide-react";
 
 export default function LoginPage() {
     const { login, loginWithGoogle } = useAuth();
@@ -30,18 +10,12 @@ export default function LoginPage() {
     const location = useLocation();
     const from = location.state?.from?.pathname || "/";
 
-    const handleSignIn = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        const formData = new FormData(event.currentTarget);
-        const email = formData.get("email") as string;
-        const password = formData.get("password") as string;
-
+    const handleSignIn = async (data: any) => {
         try {
-            await login(email, password);
+            await login(data.email, data.password);
             navigate(from, { replace: true });
-            toast.success("Welcome back!");
         } catch (error) {
-            toast.error("Failed to sign in. Please try again.");
+            throw error; // Rethrow to let AuthComponent handle modal error state
         }
     };
 
@@ -49,30 +23,28 @@ export default function LoginPage() {
         try {
             await loginWithGoogle();
             navigate(from, { replace: true });
-            toast.success("Welcome back!");
         } catch (error) {
             toast.error("Google sign in failed.");
+            throw error;
         }
     };
 
-    const handleResetPassword = () => {
-        toast.info("Password reset functionality coming soon.");
-    };
-
-    const handleCreateAccount = () => {
+    const handleSwitchToSignup = () => {
         navigate("/signup");
     };
 
+    const handleLegalClick = () => {
+        navigate("/legal");
+    };
+
     return (
-        <SignInPage
-            title={<span className="font-light text-white tracking-tighter">Welcome back to <span className="text-purple-400 font-semibold">Forsee AI</span></span>}
-            description="Sign in to access your predictive intelligence dashboard"
-            heroImageSrc="https://images.unsplash.com/photo-1518770660439-4636190af475?w=1200&q=80"
-            testimonials={testimonials}
-            onSignIn={handleSignIn}
-            onGoogleSignIn={handleGoogleSignIn}
-            onResetPassword={handleResetPassword}
-            onCreateAccount={handleCreateAccount}
+        <AuthComponent
+            mode="signin"
+            onAuth={handleSignIn}
+            onGoogleLogin={handleGoogleSignIn}
+            onSwitchMode={handleSwitchToSignup}
+            onLegalClick={handleLegalClick}
+            brandName="Forsee AI"
         />
     );
 }

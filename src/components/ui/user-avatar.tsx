@@ -1,10 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { User, LogOut, Settings, ChevronDown } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { User, LogOut, Settings, ChevronDown, Users } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
 export const UserAvatar: React.FC = () => {
-    const { user, logout } = useAuth();
+    const { user, logout, setRole } = useAuth();
+    const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -64,12 +66,26 @@ export const UserAvatar: React.FC = () => {
                     </div>
 
                     {/* Menu Items */}
-                    <div className="p-2">
+                    <div className="p-2 space-y-1">
+                        <button
+                            className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-muted-foreground hover:text-white hover:bg-white/5 transition-colors text-left"
+                            onClick={() => {
+                                setRole(null);
+                                setIsOpen(false);
+                            }}
+                        >
+                            <Users className="w-4 h-4" />
+                            <span>Change Role</span>
+                        </button>
+
+                        <div className="h-px bg-border my-1" />
+
                         <button
                             className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-red-400 hover:bg-red-500/10 transition-colors text-left"
                             onClick={() => {
                                 logout();
                                 setIsOpen(false);
+                                navigate('/login');
                             }}
                         >
                             <LogOut className="w-4 h-4" />

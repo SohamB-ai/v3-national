@@ -3,7 +3,7 @@
 import * as React from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { SquareArrowOutUpRight } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function cn(...classes: Array<string | undefined | null | false>) {
     return classes.filter(Boolean).join(" ");
@@ -117,6 +117,7 @@ export function CardStack<T extends CardStackItem>({
     onChangeIndex,
     renderCard,
 }: CardStackProps<T>) {
+    const navigate = useNavigate();
     const reduceMotion = useReducedMotion();
     const len = items.length;
 
@@ -315,8 +316,7 @@ export function CardStack<T extends CardStackItem>({
                                     // We apply translateZ by using a CSS transform in a child wrapper.
                                     onClick={() => {
                                         if (isActive && item.href) {
-                                            // Navigate when clicking active card
-                                            window.location.href = item.href;
+                                            navigate(item.href);
                                         } else {
                                             setActive(i);
                                         }
@@ -324,7 +324,7 @@ export function CardStack<T extends CardStackItem>({
                                     {...dragProps}
                                 >
                                     <div
-                                        className="h-full w-full"
+                                        className="h-full w-full bg-[#0B0B0B]"
                                         style={{
                                             transform: `translateZ(${z}px)`,
                                             transformStyle: "preserve-3d",
@@ -367,8 +367,6 @@ export function CardStack<T extends CardStackItem>({
                     {activeItem.href ? (
                         <Link
                             to={activeItem.href}
-                            target="_blank"
-                            rel="noreferrer"
                             className="text-muted-foreground hover:text-foreground transition"
                             aria-label="Open link"
                         >
@@ -402,17 +400,17 @@ function DefaultFanCard({ item }: { item: CardStackItem; active: boolean }) {
             </div>
 
             {/* subtle gradient overlay at bottom for text readability */}
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
 
             {/* content */}
-            <div className="relative z-10 flex h-full flex-col justify-end p-5">
-                <div className="truncate text-lg font-semibold text-white">
+            <div className="relative z-10 flex h-full flex-col justify-end p-6">
+                <h3 className="truncate text-2xl font-bold text-white mb-2">
                     {item.title}
-                </div>
+                </h3>
                 {item.description ? (
-                    <div className="mt-1 line-clamp-2 text-sm text-white/80">
+                    <p className="line-clamp-2 text-sm text-slate-300 font-medium">
                         {item.description}
-                    </div>
+                    </p>
                 ) : null}
             </div>
         </div>

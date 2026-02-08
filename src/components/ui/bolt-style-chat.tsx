@@ -35,8 +35,8 @@ function ChatInput({ onSend, placeholder = "Ask anything about Forsee AI..." }: 
 
     return (
         <div className="relative w-full max-w-[680px] mx-auto">
-            <div className="absolute -inset-[1px] rounded-2xl bg-gradient-to-b from-white/[0.08] to-transparent pointer-events-none" />
-            <div className="relative rounded-2xl bg-[#000000] ring-1 ring-white/[0.08] shadow-[0_0_0_1px_rgba(255,255,255,0.05),0_2px_20px_rgba(0,0,0,0.4)]">
+            <div className="absolute -inset-[1px] rounded-2xl bg-gradient-to-b from-foreground/[0.08] to-transparent pointer-events-none" />
+            <div className="relative rounded-2xl bg-background ring-1 ring-foreground/[0.1] shadow-[0_2px_20px_rgba(0,0,0,0.1)] dark:shadow-[0_2px_20px_rgba(0,0,0,0.4)]">
                 <div className="relative">
                     <textarea
                         ref={textareaRef}
@@ -44,7 +44,7 @@ function ChatInput({ onSend, placeholder = "Ask anything about Forsee AI..." }: 
                         onChange={(e) => setMessage(e.target.value)}
                         onKeyDown={handleKeyDown}
                         placeholder={placeholder}
-                        className="w-full resize-none bg-transparent text-[15px] text-white placeholder-[#5a5a5f] px-5 pt-5 pb-3 focus:outline-none min-h-[80px] max-h-[200px]"
+                        className="w-full resize-none bg-transparent text-[15px] text-foreground placeholder-muted-foreground px-5 pt-5 pb-3 focus:outline-none min-h-[80px] max-h-[200px]"
                         style={{ height: '80px' }}
                     />
                 </div>
@@ -68,22 +68,22 @@ function ChatInput({ onSend, placeholder = "Ask anything about Forsee AI..." }: 
 function RayBackground() {
     return (
         <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none select-none">
-            <div className="absolute inset-0 bg-[#000000]" />
+            <div className="absolute inset-0 bg-background" />
             <div
-                className="absolute left-1/2 -translate-x-1/2 w-[4000px] h-[1800px] sm:w-[6000px]"
+                className="absolute left-1/2 -translate-x-1/2 w-[4000px] h-[1800px] sm:w-[6000px] z-10"
                 style={{
-                    background: `radial-gradient(circle at center 800px, rgba(157, 78, 221, 0.8) 0%, rgba(157, 78, 221, 0.35) 14%, rgba(157, 78, 221, 0.18) 18%, rgba(157, 78, 221, 0.08) 22%, rgba(0, 0, 0, 0.2) 25%)`
+                    background: `radial-gradient(circle at center 800px, rgba(157, 78, 221, 0.8) 0%, rgba(157, 78, 221, 0.35) 14%, rgba(157, 78, 221, 0.18) 18%, rgba(157, 78, 221, 0.08) 22%, transparent 25%)`
                 }}
             />
             <div
                 className="absolute top-[175px] left-1/2 w-[1600px] h-[1600px] sm:top-1/2 sm:w-[3043px] sm:h-[2865px]"
                 style={{ transform: 'translate(-50%) rotate(180deg)' }}
             >
-                <div className="absolute w-full h-full rounded-full -mt-[13px]" style={{ background: 'radial-gradient(43.89% 25.74% at 50.02% 97.24%, #111114 0%, #000000 100%)', border: '16px solid white', transform: 'rotate(180deg)', zIndex: 5 }} />
+                <div className="absolute w-full h-full rounded-full -mt-[13px] border-[16px] border-foreground/10" style={{ background: 'radial-gradient(43.89% 25.74% at 50.02% 97.24%, hsl(var(--muted)/0.1) 0%, #000000 100%)', transform: 'rotate(180deg)', zIndex: 5 }} />
                 <div className="absolute w-full h-full rounded-full bg-[#000000] -mt-[11px]" style={{ border: '23px solid #E9D5FF', transform: 'rotate(180deg)', zIndex: 4 }} />
                 <div className="absolute w-full h-full rounded-full bg-[#000000] -mt-[8px]" style={{ border: '23px solid #D8B4FE', transform: 'rotate(180deg)', zIndex: 3 }} />
                 <div className="absolute w-full h-full rounded-full bg-[#000000] -mt-[4px]" style={{ border: '23px solid #C084FC', transform: 'rotate(180deg)', zIndex: 2 }} />
-                <div className="absolute w-full h-full rounded-full bg-[#000000]" style={{ border: '20px solid #9d4edd', boxShadow: '0 -15px 24.8px rgba(157, 78, 221, 0.6)', transform: 'rotate(180deg)', zIndex: 1 }} />
+                <div className="absolute w-full h-full rounded-full bg-white -mt-[0px]" style={{ border: '20px solid #9d4edd', boxShadow: '0 -15px 24.8px rgba(157, 78, 221, 0.6)', transform: 'rotate(180deg)', zIndex: 1 }} />
             </div>
         </div>
     )
@@ -104,19 +104,19 @@ export function BoltStyleChat({
     onSend
 }: BoltChatProps) {
     return (
-        <div className="relative flex flex-col items-center justify-center min-h-screen w-full overflow-hidden bg-[#000000]">
+        <div className="relative flex flex-col items-center justify-center min-h-screen w-full overflow-hidden bg-background transition-colors duration-500">
             <RayBackground />
             {/* Content container */}
             <div className="absolute top-[66%] left-1/2 sm:top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center w-full h-full overflow-hidden px-4">
                 {/* Title section */}
-                <div className="text-center mb-6">
-                    <h1 className="text-4xl sm:text-5xl font-bold text-white tracking-tight mb-1">
+                <div className="text-center mb-6 relative z-20">
+                    <h1 className="text-4xl sm:text-5xl font-bold text-foreground dark:text-white tracking-tight mb-1">
                         {title}{' '}
-                        <span className="bg-gradient-to-b from-[#9d4edd] via-[#9d4edd] to-white bg-clip-text text-transparent italic inline-block py-1 pr-1">
+                        <span className="bg-gradient-to-b from-[#9d4edd] via-[#9d4edd] to-foreground dark:to-white bg-clip-text text-transparent italic inline-block py-1 pr-1">
                             Forsee AI
                         </span>
                     </h1>
-                    <p className="text-base font-semibold sm:text-lg text-[#8a8a8f]">{subtitle}</p>
+                    <p className="text-base font-semibold sm:text-lg text-muted-foreground dark:text-white">{subtitle}</p>
                 </div>
 
                 {/* Chat input */}

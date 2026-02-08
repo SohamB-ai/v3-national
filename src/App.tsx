@@ -4,9 +4,12 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { BubbleNav } from "@/components/navigation/BubbleNav";
+import ScrollToTop from "@/components/navigation/ScrollToTop";
 import { AuthProvider, useAuth } from "@/context/AuthContext";
+import { DashboardProvider } from "@/context/DashboardContext";
+import { ThemeProvider } from "@/context/ThemeContext";
+import { RoleSelectionModal } from "@/components/auth/RoleSelectionModal";
 import HomePage from "./pages/HomePage";
-import InfoPage from "./pages/InfoPage";
 import SystemsCatalog from "./pages/SystemsCatalog";
 import SystemPage from "./pages/SystemPage";
 import Dashboard from "./pages/Dashboard";
@@ -16,7 +19,10 @@ import NotFound from "./pages/NotFound";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import PricingPage from "./pages/PricingPage";
+import LegalPage from "./pages/LegalPage";
 import { CursorGlow } from "@/components/ui/cursor-glow";
+import SystemResultPage from "./pages/SystemResultPage";
+import { SmoothScroll } from "@/components/ui/smooth-scroll";
 
 const queryClient = new QueryClient();
 
@@ -42,19 +48,29 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
 // App routes wrapper (needs to be inside BrowserRouter for useLocation)
 function AppRoutes() {
+  const location = useLocation();
+  const hideNav = (location.pathname === '/login' || location.pathname === '/signup');
+
   return (
     <>
-      <BubbleNav />
+      {!hideNav && <BubbleNav />}
+      <RoleSelectionModal />
       <Routes>
         {/* Public routes */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
+        <Route path="/legal" element={<LegalPage />} />
 
         {/* Protected routes */}
-        <Route path="/" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
-        <Route path="/info" element={<ProtectedRoute><InfoPage /></ProtectedRoute>} />
+        <Route path="/" element={<HomePage />} />
+        <Route path="/systems" element={<ProtectedRoute><SystemsCatalog /></ProtectedRoute>} />
+
+
+        // ... existing code ...
+
         <Route path="/systems" element={<ProtectedRoute><SystemsCatalog /></ProtectedRoute>} />
         <Route path="/system/:slug" element={<ProtectedRoute><SystemPage /></ProtectedRoute>} />
+        <Route path="/system/:slug/prediction" element={<ProtectedRoute><SystemResultPage /></ProtectedRoute>} />
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         <Route path="/output-preview" element={<ProtectedRoute><OutputPreview /></ProtectedRoute>} />
         <Route path="/chatbot" element={<ProtectedRoute><ChatbotPage /></ProtectedRoute>} />
@@ -79,16 +95,23 @@ function AppRoutes() {
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <CursorGlow />
-      <Toaster />
-      <Sonner />
-      <AuthProvider>
-        <BrowserRouter>
-          <AppRoutes />
-        </BrowserRouter>
-      </AuthProvider>
-    </TooltipProvider>
+    <ThemeProvider>
+      <SmoothScroll>
+        <TooltipProvider>
+          <CursorGlow />
+          <Toaster />
+          <Sonner />
+          <AuthProvider>
+            <DashboardProvider>
+              <BrowserRouter>
+                <ScrollToTop />
+                <AppRoutes />
+              </BrowserRouter>
+            </DashboardProvider>
+          </AuthProvider>
+        </TooltipProvider>
+      </SmoothScroll>
+    </ThemeProvider>
   </QueryClientProvider>
 );
 

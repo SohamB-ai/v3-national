@@ -19,7 +19,7 @@ export function GlobalStatusBar() {
             {kpiData.map((kpi, idx) => (
                 <div
                     key={idx}
-                    className="group relative flex-shrink-0 w-32 h-20 bg-white/5 backdrop-blur-md border border-white/10 rounded-xl overflow-hidden cursor-pointer hover:border-white/20 transition-all duration-300 hover:shadow-[0_0_20px_rgba(0,224,198,0.1)] hover:-translate-y-1"
+                    className="group relative flex-shrink-0 w-32 h-20 bg-foreground/5 backdrop-blur-md border border-foreground/10 rounded-xl overflow-hidden cursor-pointer hover:border-foreground/20 transition-all duration-300 hover:shadow-[0_0_20px_rgba(0,224,198,0.1)] hover:-translate-y-1"
                 >
                     {/* Front Face */}
                     <div className="absolute inset-0 flex flex-col justify-center items-center p-2 group-hover:opacity-0 transition-opacity duration-300">
@@ -27,11 +27,11 @@ export function GlobalStatusBar() {
                             kpi.status === "success" && "text-[#00E0C6]",
                             kpi.status === "warning" && "text-[#FFB020]",
                             kpi.status === "critical" && "text-[#FF5C5C]",
-                            kpi.status === "info" && "text-cyan-400",
-                            kpi.status === "neutral" && "text-slate-400"
+                            kpi.status === "info" && "text-cyan-600 dark:text-cyan-400",
+                            kpi.status === "neutral" && "text-muted-foreground"
                         )} />
-                        <span className="text-xl font-bold text-white tracking-tight font-tinos font-inter">{kpi.value}</span>
-                        <span className="text-[10px] uppercase tracking-wider text-slate-400 font-medium truncate w-full text-center">{kpi.label}</span>
+                        <span className="text-xl font-bold text-foreground tracking-tight font-tinos font-inter">{kpi.value}</span>
+                        <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium truncate w-full text-center">{kpi.label}</span>
                     </div>
 
                     {/* Back Face (Hover) */}

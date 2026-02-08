@@ -31,6 +31,7 @@ interface SignInPageProps {
     onGoogleSignIn?: () => void;
     onResetPassword?: () => void;
     onCreateAccount?: () => void;
+    onLegalClick?: () => void;
 }
 
 // --- SUB-COMPONENTS ---
@@ -63,6 +64,7 @@ export const SignInPage: React.FC<SignInPageProps> = ({
     onGoogleSignIn,
     onResetPassword,
     onCreateAccount,
+    onLegalClick,
 }) => {
     const [showPassword, setShowPassword] = useState(false);
 
@@ -121,6 +123,15 @@ export const SignInPage: React.FC<SignInPageProps> = ({
                         <p className="animate-element text-center text-sm text-gray-400">
                             New to Forsee AI? <a href="#" onClick={(e) => { e.preventDefault(); onCreateAccount?.(); }} className="text-purple-400 hover:underline transition-colors">Create Account</a>
                         </p>
+
+                        <div className="animate-element pt-4 text-center">
+                            <button
+                                onClick={(e) => { e.preventDefault(); onLegalClick?.(); }}
+                                className="inline-flex items-center px-6 py-2 rounded-full border border-white/10 bg-white/5 text-sm text-gray-400 hover:text-white hover:border-purple-500/50 hover:bg-purple-500/10 transition-all duration-300 backdrop-blur-sm"
+                            >
+                                Privacy & Terms
+                            </button>
+                        </div>
                     </div>
                 </div>
             </section>
